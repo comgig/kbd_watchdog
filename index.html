@@ -161,7 +161,7 @@ function render(data){
             <td class="align-middle d-none d-md-table-cell">${element.amphur}</td>
             <td class="align-middle d-none d-md-table-cell">${element.province}</td>
             <td class="align-middle d-none d-md-table-cell">${element.postalCode}</td>
-            <td class="align-middle text-danger text-sm">${(element.esaSurcharged=="1")?`พื้นที่ห่างไกล`:''}${element.warningMessage??''}</td>
+            <td class="align-middle text-danger text-sm">${(element.esaSurcharged=="1")?`พื้นที่ห่างไกล +50 บาท`:''}${element.warningMessage??''}</td>
             <td class="text-end align-middle d-none d-md-table-cell"><div class="text-sm text-info"><span class="material-symbols-outlined me-2 text-md">warehouse</span><span class="badge bg-light text-dark pointer routeCode">${element.linehualRoute}</span> <span class="badge bg-light text-dark pointer routeCode">${element.routeCode}</span></div></td>
             </tr>`
     });
