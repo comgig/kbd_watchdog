@@ -11,13 +11,20 @@
     <style>
         body { font-family: 'Kanit', sans-serif; }
         .text-sm {
-            font-size: small;
-        }
-        .text-xs {
             font-size: 10pt;
         }
-    
+        .text-md {
+            font-size: 12pt;
+        }
+        .routeCode{
+            cursor: pointer;
+        }
+        .routeCode:hover{
+            background-color: aqua;
+        }
 
+ 
+    
         .grow {
             animation-name: spin;
   animation-duration: 500ms;
@@ -39,25 +46,26 @@
 </head>
   <body>
     <div class="container-md mt-3 text-center" id="bodyLoad">
-    <h3 class="mt-5">ตรวจสอบพื้นที่จัดส่งพัสดุเคอรี่</h1>
-    <p class="text-md text-danger">ไม่สามารถจัดส่งได้ รหัสไปรณีย์</p>
-    <p class="text-sm mb-5">Last update: </p>
+    <h3 class="mt-5">สถานะพื้นที่การจัดส่งพัสดุของเคอรี่</h1>
+    <p class="text-md text-danger" id="status"></p>
+    <p class="text-sm" id="updated"></p>
 
-    <div class="my-3">
-        <button class="btn btn-outline-secondary" type="button" id="close">Full Block</button>
-        <button class="btn btn-outline-secondary" type="button" id="delayed">Delayed</button>
-        <button class="btn btn-outline-secondary" type="button" id="block">Big Delayed</button>
+    <div class="my-5">
+        <button class="btn btn-danger" type="button" id="close">พื้นที่งดจัดส่ง</button>
+        <button class="btn btn-warning" type="button" id="delayed">พื้นที่ล่าช้า</button>
+        <button class="btn btn-warning" type="button" id="block">พัสดุขนาดใหญ่ล่าช้า</button>
 
     </div>
 
 
     <div class="input-group mb-3">
-    <span class="input-group-text" id="basic-addon1"><span class="material-symbols-outlined">mail</span></span>
+    <span class="input-group-text"><span class="material-symbols-outlined">explore</span></span>
     <input type="text" class="form-control" placeholder="ค้นหาพื้นที่">
     <button class="btn btn-outline-secondary" type="button" id="search">Search</button>
     </div>
 
     <div id="response"></div>
+
 
     </div>
 
@@ -66,59 +74,99 @@
   
 <script>
 
+document.querySelector("#updated").innerHTML = 'Last updated: '+new Date().toJSON().slice(0,10).replace(/-/g,'-');
+
 document.querySelector("#search").addEventListener("click", async () => {
     const response = await API({"action":"search","value":document.querySelector("input").value})
     document.querySelector("#response").innerHTML = render(response.data)
+    routeCode()
+});
+
+document.querySelector("input").addEventListener("keydown", async (e) => {
+    if (e.key === 'Enter') {
+        const response = await API({"action":"search","value":document.querySelector("input").value})
+        document.querySelector("#response").innerHTML = render(response.data)
+        routeCode()
+    }
 });
 
 document.querySelector("#close").addEventListener("click", async () => {
+    document.querySelector("input").value=''
     const response = await API({"action":"close"})
     document.querySelector("#response").innerHTML = render(response.data)
+    routeCode()
 });
 document.querySelector("#delayed").addEventListener("click", async () => {
+    document.querySelector("input").value=''
     const response = await API({"action":"delayed"})
     document.querySelector("#response").innerHTML = render(response.data)
+    routeCode()
 });
 document.querySelector("#block").addEventListener("click", async () => {
+    document.querySelector("input").value=''
     const response = await API({"action":"block"})
     document.querySelector("#response").innerHTML = render(response.data)
+    routeCode()
 });
 
+
+function routeCode() {
+    document.querySelectorAll(".routeCode").forEach(function(element){
+        element.addEventListener("click", async () => {
+            document.querySelector("input").value=element.innerHTML
+            const response = await API({"action":"search",value:element.innerHTML})
+            document.querySelector("#response").innerHTML = render(response.data)
+            routeCode()
+        })
+    })
+}
 
 function render(data){
    
-    if(!data){ return;}
+    if(!data.length){ return `ไม่พบข้อมูล`;}
+    let status = ''
+    let count_inactive = 0
+    let count_capacities = 0
+    let count_BlockSize = 0
     let html = `<table class="table table-sm table-striped table-hover">`
     data.forEach(element => {
         let icon = `<span class="material-symbols-outlined text-success">where_to_vote</span>`
 
 
         if(element.masterBlockSize.length){
-            icon = `<span class="material-symbols-outlined text-warning">emergency_heat</span>`
-            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined">pallet</span><span class="text-sm">${element.masterBlockSize.length}</span>`:element.warningMessage
-
+            count_BlockSize++
+            icon = `<span class="material-symbols-outlined text-warning grow">emergency_heat</span>`
+            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined me-2">local_shipping</span> <span class="text-sm">พัสดุขนาดใหญ่อาจล่าช้า +2 วัน</span>`:element.warningMessage
+            status = `พื้นที่ปลายทาง ${count_BlockSize} ตำบล จัดส่งพัสดุขนาดใหญ่อาจล่าช้า (ขนาด S+ ขึ้นไป) งดส่งพัสดุที่มีอายุขัยหรือเน่าเสียได้ง่าย`
         }
 
         if(element.masterPostalCodeCapacities){
-            icon = `<span class="material-symbols-outlined text-danger">emergency_heat</span>`
-            element.warningMessage = (!element.warningMessage)?`<span class="text-sm">+${element.masterPostalCodeCapacities.serviceAdjust} วัน</span>`:element.warningMessage
+            count_capacities++
+            icon = `<span class="material-symbols-outlined text-danger grow">emergency_heat</span>`
+            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined me-2">trolley</span> <span class="text-sm">พัสดุทุกขนาดอาจล่าช้า +${element.masterPostalCodeCapacities.serviceAdjust} วัน</span>`:element.warningMessage
+            status = `พื้นที่ปลายทาง ${count_capacities} ตำบล จัดส่งพัสดุทุกขนาดอาจล่าช้า กำลังคนไม่เพียงพอ งดส่งพัสดุที่มีอายุขัยหรือเน่าเสียได้ง่าย`
         }
 
         if(element.inactive){
+            count_inactive++
             icon = `<span class="material-symbols-outlined text-danger">wrong_location</span>`
+            status = `พื้นที่ปลายทาง ${count_inactive} ตำบล ไม่สามารถออกนำจ่ายได้ งดรับพัสดุไปยังปลายทางดังกล่าวชั่วคราว`
+
         }
 
         html += `<tr>
             <td>${icon??''}</td>
-            <td>${element.district}</td>
-            <td>${element.amphur}</td>
-            <td>${element.province}</td>
-            <td class="text-xs align-middle text-danger">${element.warningMessage??''}</td>
-            <td>${element.routeCode}</td>
-            <td>${element.linehualRoute}</td>
+            <td class="align-middle">${element.district}</td>
+            <td class="align-middle">${element.amphur}</td>
+            <td class="align-middle">${element.province}</td>
+            <td class="align-middle">${element.postalCode}</td>
+            <td class="align-middle text-danger text-sm">${element.warningMessage??''}</td>
+            <td class="text-end align-middle"><div class="text-sm text-info"><span class="material-symbols-outlined me-2 text-md">warehouse</span><span class="badge bg-light text-dark pointer routeCode">${element.linehualRoute}</span> <span class="badge bg-light text-dark pointer routeCode">${element.routeCode}</span></div></td>
             </tr>`
     });
     html += `</table>`
+
+    document.querySelector("#status").innerHTML = status
 
     return html
 }
