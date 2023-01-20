@@ -22,9 +22,6 @@
         .routeCode:hover{
             background-color: aqua;
         }
-
- 
-    
         .grow {
             animation-name: spin;
   animation-duration: 500ms;
@@ -51,9 +48,9 @@
     <p class="text-sm" id="updated"></p>
 
     <div class="my-5">
-        <button class="btn btn-danger" type="button" id="close">พื้นที่งดจัดส่ง</button>
-        <button class="btn btn-warning" type="button" id="delayed">พื้นที่ล่าช้า</button>
-        <button class="btn btn-warning" type="button" id="block">พัสดุขนาดใหญ่ล่าช้า</button>
+        <button class="btn btn-sm btn-danger" type="button" id="close">พื้นที่งดจัดส่ง</button>
+        <button class="btn btn-sm btn-warning" type="button" id="delayed">พื้นที่ล่าช้า</button>
+        <button class="btn btn-sm btn-warning" type="button" id="block">พัสดุขนาดใหญ่ล่าช้า</button>
 
     </div>
 
@@ -156,12 +153,12 @@ function render(data){
 
         html += `<tr>
             <td>${icon??''}</td>
-            <td class="align-middle">${element.district}</td>
-            <td class="align-middle">${element.amphur}</td>
-            <td class="align-middle">${element.province}</td>
-            <td class="align-middle">${element.postalCode}</td>
+            <td class="align-middle ">${element.district}</td>
+            <td class="align-middle d-none d-md-table-cell">${element.amphur}</td>
+            <td class="align-middle d-none d-md-table-cell">${element.province}</td>
+            <td class="align-middle d-none d-md-table-cell">${element.postalCode}</td>
             <td class="align-middle text-danger text-sm">${element.warningMessage??''}</td>
-            <td class="text-end align-middle"><div class="text-sm text-info"><span class="material-symbols-outlined me-2 text-md">warehouse</span><span class="badge bg-light text-dark pointer routeCode">${element.linehualRoute}</span> <span class="badge bg-light text-dark pointer routeCode">${element.routeCode}</span></div></td>
+            <td class="text-end align-middle d-none d-md-table-cell"><div class="text-sm text-info"><span class="material-symbols-outlined me-2 text-md">warehouse</span><span class="badge bg-light text-dark pointer routeCode">${element.linehualRoute}</span> <span class="badge bg-light text-dark pointer routeCode">${element.routeCode}</span></div></td>
             </tr>`
     });
     html += `</table>`
@@ -170,9 +167,6 @@ function render(data){
 
     return html
 }
-
-
-
 </script>
 </body>
 </html>
