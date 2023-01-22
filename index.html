@@ -116,7 +116,7 @@ function routeCode() {
         element.addEventListener("click", async () => {
             document.querySelector("input").value=element.innerHTML
             const response = await API({"action":"search",value:element.innerHTML})
-            document.querySelector("#response").innerHTML = render(response.data)
+            document.querySelector("#response").innerHTML = render(response)
             routeCode()
         })
     })
