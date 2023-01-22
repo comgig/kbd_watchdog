@@ -147,14 +147,14 @@ function render(response){
         if(element.masterBlockSize.length){
             count_BlockSize++
             icon = `<span class="material-symbols-outlined text-warning grow">emergency_heat</span>`
-            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined me-2">local_shipping</span> <span class="text-sm">พัสดุขนาดใหญ่อาจล่าช้า +2 วัน</span>`:element.warningMessage
+            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined me-2">local_shipping</span> <span class="text-sm">พัสดุขนาดใหญ่อาจล่าช้า</span>`:element.warningMessage
             status = `พื้นที่ปลายทาง ${count_BlockSize} ตำบล จัดส่งพัสดุขนาดใหญ่อาจล่าช้า`
         }
 
         if(element.masterPostalCodeCapacities){
             count_capacities++
             icon = `<span class="material-symbols-outlined text-danger grow">emergency_heat</span>`
-            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined me-2">trolley</span> <span class="text-sm">พัสดุทุกขนาดอาจล่าช้า +${element.masterPostalCodeCapacities.serviceAdjust} วัน</span>`:element.warningMessage
+            element.warningMessage = (!element.warningMessage)?`<span class="material-symbols-outlined me-2">trolley</span> <span class="text-sm">พัสดุทุกขนาดอาจล่าช้า</span>`:element.warningMessage
             status = `พื้นที่ปลายทาง ${count_capacities} ตำบล จัดส่งพัสดุทุกขนาดอาจล่าช้า`
         }
 
@@ -174,38 +174,41 @@ function render(response){
 
             
              html += `<tr class="p-0">
-            <td colspan="7" class="pt-3 text-start bg-light">
+            <td colspan="7" class="pt-3 text-md-start bg-light">
 
                 
-                <div class="bg-light d-flex justify-content-between">
-
-                    <div>
-
-                
-
-                <span class="badge text-bg-light">รหัส ${report.postcode} มีการสุ่มพัสดุ: ${report.con_total||0} หมายเลข </span>
+                <div class="bg-light d-md-flex justify-content-between">
 
 
-                <span class="badge text-bg-success">นำส่งสำเร็จ: ${report.con_success||0}</span>
+                <div class="d-md-flex align-items-center gap-1">
 
-                <span class="badge text-bg-danger">ไม่สำเร็จ: ${report.con_unsuccess||0}</span>
+                <span class="badge text-bg-light">รหัสไปรษณีย์ ${report.postcode} สุ่มตรวจจำนวน: ${report.con_total||0} ชิ้น</span>
                 </div>
+               
 
-                <div class="d-flex align-items-center gap-1">
+               <div class="d-md-flex align-items-center gap-2">
+        
+                <span class="px-2 text-bg-success">ส่งสำเร็จ: ${number_format(((report.con_success||0)/report.con_total)*100,2)}%</span>
+                <span class="px-2 text-bg-danger">ไม่สำเร็จ: ${number_format(((report.con_unsuccess||0)/report.con_total)*100,2)}%</span>
+
+                </div>
+               
+
+                <div class="d-md-flex align-items-center gap-1">
 
                 <span class="material-symbols-outlined text-md">local_shipping</span>
 
-                <span class="badge text-bg-success">ND: ${report.ND||0}</span>
+                <span class="badge text-bg-light">ND : ${report.ND||0}</span>
 
-                <span class="badge text-bg-success">2D: ${report['2D']||0}</span>
+                <span class="badge text-bg-light">2D : ${report['2D']||0}</span>
 
-                <span class="badge text-bg-warning">3D: ${report['3D']||0}</span>
+                <span class="badge text-bg-light">3D : ${report['3D']||0}</span>
 
-                <span class="badge text-bg-warning">4D: ${report['4D']||0}</span>
+                <span class="badge text-bg-light">4D : ${report['4D']||0}</span>
 
-                <span class="badge text-bg-danger">5D: ${report['5D']||0}</span>
+                <span class="badge text-bg-light">5D : ${report['5D']||0}</span>
                 
-                <span class="badge text-bg-danger">OD: ${report['OD']||0}</span>
+                <span class="badge text-bg-light">OD : ${report['OD']||0}</span>
                 </div>
 
                 
@@ -227,14 +230,26 @@ function render(response){
             <td class="text-end align-middle d-none d-md-table-cell"><div class="text-sm text-info"><span class="material-symbols-outlined me-2 text-md">warehouse</span><span class="badge bg-light text-dark pointer routeCode">${element.linehualRoute}</span> <span class="badge bg-light text-dark pointer routeCode">${element.routeCode}</span></div></td>
             </tr>`
     });
-    html += `</table>`
+    html += `</table>
+    
+    <div class="text-start text-dark text-sm">* อัตราการส่งสำเร็จคำนวนจาก พัสดุที่นำส่งสำเร็จทั้งหมด (ส่งช้า 5-6 วัน ก็นับหากพัสดุชิ้นนั้น มีสถานะจัดส่งสำเร็จ)</div>
+    <div class="text-start text-dark text-sm">** อัตราการส่งไม่สำเร็จคำนวนจาก พัสดุตีกลับ ไม่สามารถติดต่อผู้รับได้ ผู้รับปฏิเสธรับพัสดุ พัสดุเสียหาย พัสดุส่งทำลาย อื่นๆ</div>
+    <div class="text-start text-dark text-sm">*** อัตราความสำเร็จนี้มาจากการสุ่มพัสดุมาเพียงเล็กน้อยจากพัสดุทั้งหมดในคลัง อาจบังเอินได้ว่าสุ่มเจอพัสดุที่มีปัญหา จึงทำให้ % ไม่สำเร็จมีสูง โปรดใช้วิจารณญาณในการวิเคราะห์อีกครั้ง โดยพิจารณาจากจำนวนพัสดุที่สุ่มเลขขึ้นมาตรวจ</div>
+
+    `
 
     document.querySelector("#status").innerHTML = status
 
     return html
 }
 
-
+function number_format(number_input=0, decimal_places=0, separator=',') {
+    const formatted = parseFloat(number_input).toFixed(decimal_places).split(".");
+    const processing = separator===','
+                    ?formatted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1,")
+                    :formatted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g,"$1"+separator)
+    return String(processing+(formatted[1]?'.'+formatted[1]:""))
+}
 
 </script>
 </body>
