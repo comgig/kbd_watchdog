@@ -124,10 +124,12 @@ function routeCode() {
 
 function render(response){
    
-    if(!response.data.length){ return `<div class="text-danger mt-4">ไม่พบข้อมูล หรือ เป็นพื้นที่งดรับส่งชั่วคราว</div>`;}
+    if(!response.data.length){ return `<div class="text-danger mt-4">ไม่พบข้อมูลการส่งพัสดุไปยังพื้นที่ดังกล่าว หรือ เป็นพื้นที่งดรับพัสดุชั่วคราว</div>`;}
 
   //  document.querySelector("#updated").innerHTML = JSON.stringify(response.report)
 
+  var d = new Date();
+    d.setDate(d.getDate()-7);
 
     let status = ''
     let count_inactive = 0
@@ -135,7 +137,7 @@ function render(response){
     let count_BlockSize = 0
     let cpost = ''
     let html = `
-    <div class="text-start text-danger"><p>หมายเหตุ: ข้อมูลพัสดุจากการสุ่มตรวจระหว่างวันที่ 20-22 จำนวน 20,000 ชิ้นจากทั่วประเทศ</p></div>
+    <div class="text-start text-info text-sm"><p>หมายเหตุ: ข้อมูลพัสดุจาก KBD โดยการสุ่มเช็คสถานะพัสดุ ที่ส่งเข้าระบบตั้งแต่วันที่ ${(d.toLocaleString('en-GB', { timeZone: 'UTC' }).split(','))[0]} จำนวน 20,000 ชิ้น ทั่วประเทศ</p></div>
     
     <table class="table table-sm table-striped table-hover">`
     response.data.forEach(element => {
