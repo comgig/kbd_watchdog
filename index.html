@@ -244,9 +244,6 @@ function render(response){
 
                 <div class="d-md-flex align-items-center gap-1">
 
-                <span class="badge text-bg-light d-none d-md-inline">ส่งสำเร็จ: ${number_format(((report.con_success||0)/report.con_total)*100,0)}%</span>
-
-
                 <span class="badge text-bg-light">ND : ${number_format(((report.ND||0)/(report.con_success||0))*100,0)}%</span>
 
                 <span class="badge text-bg-light">2D : ${number_format(((report['2D']||0)/(report.con_success||0))*100,0)}%</span>
