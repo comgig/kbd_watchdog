@@ -247,17 +247,17 @@ function render(response){
                 <span class="badge text-bg-light d-none d-md-inline">ส่งสำเร็จ: ${number_format(((report.con_success||0)/report.con_total)*100,0)}%</span>
 
 
-                <span class="badge text-bg-light">ND : ${number_format(((report.ND||0)/report.con_success)*100,0)}%</span>
+                <span class="badge text-bg-light">ND : ${number_format(((report.ND||0)/(report.con_success||0))*100,0)}%</span>
 
-                <span class="badge text-bg-light">2D : ${number_format(((report['2D']||0)/report.con_success)*100,0)}%</span>
+                <span class="badge text-bg-light">2D : ${number_format(((report['2D']||0)/(report.con_success||0))*100,0)}%</span>
 
-                <span class="badge text-bg-light">3D : ${number_format(((report['3D']||0)/report.con_success)*100,0)}%</span>
+                <span class="badge text-bg-light">3D : ${number_format(((report['3D']||0)/(report.con_success||0))*100,0)}%</span>
 
-                <span class="badge text-bg-light">4D : ${number_format(((report['4D']||0)/report.con_success)*100,0)}%</span>
+                <span class="badge text-bg-light">4D : ${number_format(((report['4D']||0)/(report.con_success||0))*100,0)}%</span>
 
-                <span class="badge text-bg-light">5D : ${number_format(((report['5D']||0)/report.con_success)*100,0)}%</span>
+                <span class="badge text-bg-light">5D : ${number_format(((report['5D']||0)/(report.con_success||0))*100,0)}%</span>
                 
-                <span class="badge text-bg-light">OD : ${number_format(((report['OD']||0)/report.con_success)*100,0)}%</span>
+                <span class="badge text-bg-light">OD : ${number_format(((report['OD']||0)/(report.con_success||0))*100,0)}%</span>
 
                 <span class="badge text-bg-danger d-none d-md-inline">ตีกลับ: ${number_format(((report.con_unsuccess||0)/report.con_total)*100,0)}%</span>
 
