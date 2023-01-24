@@ -9,7 +9,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
     <style>
-        body { font-family: 'Kanit', sans-serif; }
+   
+        body { 
+            background-image: url('img/bg-main.png');
+            background-repeat: no-repeat;
+            background-position-x: center;
+            background-position-y: top;
+            background-repeat: no-repeat;
+            background-size: 100%;
+            font-family: 'Kanit', sans-serif; 
+        }
         .text-sm {
             font-size: 10pt;
         }
@@ -33,6 +42,10 @@
             animation-iteration-count: infinite;
             animation-timing-function: linear; 
         }
+        .bgcustom{
+            background: rgba(255, 255, 255, .8);
+        }
+
         @keyframes spin {
             0% {
                 transform: scale(0);
@@ -45,12 +58,12 @@
     </style>
 </head>
   <body>
-    <div class="container-md mt-3 text-center" id="bodyLoad">
+    <div class="container-md mt-3 text-center bgcustom rounded" id="bodyLoad">
     <h3 class="mt-5">ระบบตรวจเช็กสถานะการจัดส่งพัสดุ</h1>
     <p class="text-md text-danger" id="status"></p>
     <p class="text-sm" id="updated"></p>
 
-    <div class="my-5 gap-2">
+    <div class="my-5 d-flex justify-content-center gap-3">
         <button class="btn btn-sm btn-outline-warning" type="button" id="close"># พื้นที่งดจัดส่ง</button>
         <button class="btn btn-sm btn-outline-warning" type="button" id="delayed"># พื้นที่จัดส่งล่าช้า</button>
         <button class="btn btn-sm btn-outline-warning" type="button" id="block"># พัสดุขนาดใหญ่ล่าช้า</button>
@@ -233,29 +246,18 @@
 
                 html += `<tr class="p-0">
             <td colspan="7" class="p-0 text-md-start bg-light">
-                
                 <div class="d-md-flex justify-content-between p-2 pointer getModal" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="${window.btoa(JSON.stringify(report))}">
-
-                <div class="d-md-flex align-items-center gap-1">
-                <span class="badge text-dark">รหัสไปรษณีย์ ${report.postcode} จำนวน: ${report.con_total || 0} ชิ้น</span>
-                </div>
-
-                <div class="d-md-flex align-items-center gap-1">
-
-                <span class="badge text-bg-light">ND : ${number_format(((report.ND || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-
-                <span class="badge text-bg-light">2D : ${number_format(((report['2D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-
-                <span class="badge text-bg-light">3D : ${number_format(((report['3D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-
-                <span class="badge text-bg-light">4D : ${number_format(((report['4D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-
-                <span class="badge text-bg-light">5D : ${number_format(((report['5D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-                
-                <span class="d-none d-md-inline badge text-bg-light">6D : ${number_format(((report['OD'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-
-                </div>
-
+                    <div class="d-md-flex align-items-center gap-1">
+                        <span class="badge text-dark">รหัสไปรษณีย์ ${report.postcode} จำนวน: ${report.con_total || 0} ชิ้น</span>
+                    </div>
+                    <div class="d-md-flex align-items-center gap-1">
+                        <span class="badge text-bg-light">ND : ${number_format(((report.ND || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">2D : ${number_format(((report['2D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">3D : ${number_format(((report['3D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">4D : ${number_format(((report['4D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">5D : ${number_format(((report['5D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                        <span class="d-none d-md-inline badge text-bg-light">6D : ${number_format(((report['OD'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                    </div>
                 </div>
             </td>
            </tr>`
