@@ -54,7 +54,7 @@
 </head>
   <body>
     <div class="container-md mt-3 text-center" id="bodyLoad">
-    <h3 class="mt-5">สถานะพื้นที่การจัดส่งพัสดุของเคอรี่</h1>
+    <h3 class="mt-5">ระบบตรวจเช็กสถานะการจัดส่งพัสดุ</h1>
     <p class="text-md text-danger" id="status"></p>
     <p class="text-sm" id="updated"></p>
 
@@ -208,7 +208,7 @@ function routeCode() {
         <div class="text-start text-${(data['pending_3D']>0)?'warning':'dark'} text-sm">3 วัน = ${data.pending_3D} ชิ้น</div>
         <div class="text-start text-${(data['pending_4D']>0)?'danger':'dark'} text-sm">4 วัน = ${data.pending_4D} ชิ้น</div>
         <div class="text-start text-${(data['pending_5D']>0)?'danger':'dark'} text-sm">5 วัน = ${data.pending_5D} ชิ้น</div>
-        <div class="text-start text-${(data['pending_OD']>0)?'danger':'dark'} text-sm">6 วัน = ${data.pending_OD} ชิ้น (ส่งช้ามากกว่า 5 วัน)</div>
+        <div class="text-start text-${(data['pending_OD']>0)?'danger':'dark'} text-sm">6 วัน = ${data.pending_OD} ชิ้น (พัสดุตกค้าง+ช้ามากกว่า 5 วัน)</div>
     </div>
 
 
@@ -282,7 +282,6 @@ function render(response){
 
 
                 <div class="d-md-flex align-items-center gap-1">
-
                 <span class="badge text-dark">รหัสไปรษณีย์ ${report.postcode} จำนวน: ${report.con_total||0} ชิ้น</span>
                 </div>
                
@@ -302,9 +301,7 @@ function render(response){
 
                 <span class="badge text-bg-light">5D : ${number_format(((report['5D']||0)/(report.con_success||0))*100,0)}%</span>
                 
-                <span class="badge text-bg-light">6+ : ${number_format(((report['OD']||0)/(report.con_success||0))*100,0)}%</span>
-
-                <span class="badge text-bg-danger d-none d-md-inline">ตีกลับ: ${number_format(((report.con_unsuccess||0)/report.con_total)*100,0)}%</span>
+                <span class="badge text-bg-light">6D : ${number_format(((report['OD']||0)/(report.con_success||0))*100,0)}%</span>
 
                 </div>
 
