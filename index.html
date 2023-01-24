@@ -200,8 +200,8 @@ function routeCode() {
 
     <div class="col col-lg-5 card card-body">
         <div class="text-start text-primary">พัสดุอยู่ในระหว่างจัดส่ง รวม ${data.con_pending} ชิ้น</div>
-        <div class="mt-2 text-start text-${(data['pending_ND']>0)?'warning':'dark'} text-sm">1 วัน = ${data.pending_ND} ชิ้น</div>
-        <div class="text-start text-${(data['pending_2D']>0)?'warning':'dark'} text-sm">2 วัน = ${data.pending_2D} ชิ้น</div>
+        <div class="mt-2 text-start text-${(data['pending_ND']>0)?'success':'dark'} text-sm">1 วัน = ${data.pending_ND} ชิ้น</div>
+        <div class="text-start text-${(data['pending_2D']>0)?'success':'dark'} text-sm">2 วัน = ${data.pending_2D} ชิ้น</div>
         <div class="text-start text-${(data['pending_3D']>0)?'warning':'dark'} text-sm">3 วัน = ${data.pending_3D} ชิ้น</div>
         <div class="text-start text-${(data['pending_4D']>0)?'danger':'dark'} text-sm">4 วัน = ${data.pending_4D} ชิ้น</div>
         <div class="text-start text-${(data['pending_5D']>0)?'danger':'dark'} text-sm">5 วัน = ${data.pending_5D} ชิ้น</div>
