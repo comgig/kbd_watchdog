@@ -57,13 +57,13 @@
     </style>
 </head>
   <body>
-    <div class="container-md mt-3 text-center bgcustom rounded" id="bodyLoad">
+    <div class="container-md mt-3 py-4 text-center bgcustom rounded" id="bodyLoad">
     <h3 class="mt-5">ระบบตรวจเช็กสถานะการจัดส่งพัสดุ</h1>
     <p class="text-md text-danger" id="status"></p>
     <p class="text-sm" id="updated"></p>
 
     <div class="my-5 d-flex justify-content-center gap-3">
-        <button class="btn btn-sm btn-outline-warning" type="button" id="block"># พื้นที่งดจัดส่งตามประกาศเคอรี่ (Official)</button>
+        <button class="btn btn-sm btn-outline-warning" type="button" id="block"># พื้นที่งดจัดส่ง/ล่าช้า ตามประกาศเคอรี่ (Official)</button>
     </div>
 
     <div class="input-group mb-3">
@@ -195,37 +195,27 @@
         if (!response.data.length) { return `<div class="text-danger mt-4">ไม่พบข้อมูลการส่งพัสดุไปยังพื้นที่ดังกล่าว หรือ เป็นพื้นที่งดรับพัสดุชั่วคราว</div>`; }
 
         let status = ''
-        let count_inactive = 0
-        let count_capacities = 0
-        let count_BlockSize = 0
-        let cpost = ''
+        let checkPost = ''
         let html = `<table class="table table-sm table-striped table-hover">`
+        let icon = `<span class="material-symbols-outlined text-success">location_on</span>`
+
         response.data.forEach(element => {
-            let icon = `<span class="material-symbols-outlined text-success">where_to_vote</span>`
 
             if (element.masterBlockSize.length) {
-                count_BlockSize++
-                icon = `<span class="material-symbols-outlined text-warning grow">emergency_heat</span>`
                 element.warningMessage = (!element.warningMessage) ? `<span class="text-sm">พัสดุขนาดใหญ่อาจล่าช้า</span>` : element.warningMessage
-               // status += `[${count_BlockSize} ตำบล จัดส่งพัสดุขนาดใหญ่อาจล่าช้า] `
             }
 
             if (element.masterPostalCodeCapacities) {
-                count_capacities++
-                icon = `<span class="material-symbols-outlined text-danger grow">emergency_heat</span>`
                 element.warningMessage = (!element.warningMessage) ? `<span class="text-sm">พัสดุทุกขนาดอาจล่าช้า</span>` : element.warningMessage
-                //status += `[${count_capacities} ตำบล จัดส่งพัสดุอาจล่าช้า] `
             }
 
             if (element.inactive) {
-                count_inactive++
-                icon = `<span class="material-symbols-outlined text-danger">wrong_location</span>`
-                //status += `[${count_inactive} ตำบล ไม่สามารถออกนำจ่ายได้] `
+                icon = `<span class="material-symbols-outlined text-danger grow">wrong_location</span>`
             }
 
-            if (element.postalCode != cpost) {
-                cpost = element.postalCode
-                let report = response.report.find((element) => (element.postcode == cpost) ?? element)
+            if (element.postalCode != checkPost) {
+                checkPost = element.postalCode
+                let report = response.report.find((element) => (element.postcode == checkPost) ?? element)
                 if (!report.con_total) return
 
                 html += `<tr class="p-0">
@@ -245,7 +235,15 @@
                 </div>
             </td>
            </tr>`
+
+           if(report['3D']>3||report['4D']>1||report['5D']>1||report['OD']>1||report['pending_3D']>1||report['pending_4D']>0||report['pending_5D']>0||report['pending_OD']>0){
+            icon = `<span class="material-symbols-outlined text-warning grow">location_on</span>`
+           }else{
+            icon = `<span class="material-symbols-outlined text-success">location_on</span>`
+           }
             }
+
+
 
             html += `<tr>
             <td>${icon ?? ''}</td>
