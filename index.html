@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
     <style>
-   
         body { 
             background-image: url('img/bg-main.png');
             background-attachment: fixed;
@@ -64,9 +63,7 @@
     <p class="text-sm" id="updated"></p>
 
     <div class="my-5 d-flex justify-content-center gap-3">
-        <button class="btn btn-sm btn-outline-warning" type="button" id="close"># พื้นที่งดจัดส่ง</button>
-        <button class="btn btn-sm btn-outline-warning" type="button" id="delayed"># พื้นที่จัดส่งล่าช้า</button>
-        <button class="btn btn-sm btn-outline-warning" type="button" id="block"># พัสดุขนาดใหญ่ล่าช้า</button>
+        <button class="btn btn-sm btn-outline-warning" type="button" id="block"># พื้นที่งดจัดส่งตามประกาศเคอรี่ (Official)</button>
     </div>
 
     <div class="input-group mb-3">
@@ -123,22 +120,9 @@
         }
     });
 
-    document.querySelector("#close").addEventListener("click", async () => {
-        document.querySelector("input").value = ''
-        const response = await API({ "action": "close" })
-        document.querySelector("#response").innerHTML = render(response)
-        routeCode()
-    });
-    document.querySelector("#delayed").addEventListener("click", async () => {
-        document.querySelector("input").value = ''
-        const response = await API({ "action": "delayed" })
-        document.querySelector("#response").innerHTML = render(response)
-        routeCode()
-    });
-
     document.querySelector("#block").addEventListener("click", async () => {
         document.querySelector("input").value = ''
-        const response = await API({ "action": "block" })
+        const response = await API({ "action": "official" })
         document.querySelector("#response").innerHTML = render(response)
         routeCode()
     });
@@ -223,20 +207,20 @@
                 count_BlockSize++
                 icon = `<span class="material-symbols-outlined text-warning grow">emergency_heat</span>`
                 element.warningMessage = (!element.warningMessage) ? `<span class="text-sm">พัสดุขนาดใหญ่อาจล่าช้า</span>` : element.warningMessage
-                status = `พื้นที่ปลายทาง ${count_BlockSize} ตำบล จัดส่งพัสดุขนาดใหญ่อาจล่าช้า`
+               // status += `[${count_BlockSize} ตำบล จัดส่งพัสดุขนาดใหญ่อาจล่าช้า] `
             }
 
             if (element.masterPostalCodeCapacities) {
                 count_capacities++
                 icon = `<span class="material-symbols-outlined text-danger grow">emergency_heat</span>`
                 element.warningMessage = (!element.warningMessage) ? `<span class="text-sm">พัสดุทุกขนาดอาจล่าช้า</span>` : element.warningMessage
-                status = `พื้นที่ปลายทาง ${count_capacities} ตำบล จัดส่งพัสดุทุกขนาดอาจล่าช้า`
+                //status += `[${count_capacities} ตำบล จัดส่งพัสดุอาจล่าช้า] `
             }
 
             if (element.inactive) {
                 count_inactive++
                 icon = `<span class="material-symbols-outlined text-danger">wrong_location</span>`
-                status = `พื้นที่ปลายทาง ${count_inactive} ตำบล ไม่สามารถออกนำจ่ายได้ งดรับพัสดุไปยังปลายทางดังกล่าวชั่วคราว`
+                //status += `[${count_inactive} ตำบล ไม่สามารถออกนำจ่ายได้] `
             }
 
             if (element.postalCode != cpost) {
