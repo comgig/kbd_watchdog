@@ -197,7 +197,7 @@
         let status = ''
         let checkPost = ''
         let html = `<table class="table table-sm table-striped table-hover">`
-        let icon = `<span class="material-symbols-outlined text-success">location_on</span>`
+        let icon = ``
 
         response.data.forEach(element => {
 
@@ -209,9 +209,7 @@
                 element.warningMessage = (!element.warningMessage) ? `<span class="text-sm">พัสดุทุกขนาดอาจล่าช้า</span>` : element.warningMessage
             }
 
-            if (element.inactive) {
-                icon = `<span class="material-symbols-outlined text-danger grow">wrong_location</span>`
-            }
+           
 
             if (element.postalCode != checkPost) {
                 checkPost = element.postalCode
@@ -238,11 +236,14 @@
             </td>
            </tr>`
 
-           if(report['3D']>3||report['4D']>1||report['5D']>1||report['OD']>1||report['pending_3D']>1||report['pending_4D']>0||report['pending_5D']>0||report['pending_OD']>0){
-            icon = `<span class="material-symbols-outlined text-warning grow">location_on</span>`
-           }else{
-            icon = `<span class="material-symbols-outlined text-success">location_on</span>`
-           }
+            if(report['3D']>3||report['4D']>1||report['5D']>1||report['OD']>1||report['pending_3D']>1||report['pending_4D']>0||report['pending_5D']>0||report['pending_OD']>0){
+                icon = `<span class="material-symbols-outlined text-warning grow">location_on</span>`
+            }else{
+                icon = `<span class="material-symbols-outlined text-success">location_on</span>`
+            }
+            if (element.inactive) {
+                    icon = `<span class="material-symbols-outlined text-danger grow">wrong_location</span>`
+            }
             }
 
 
