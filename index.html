@@ -216,6 +216,8 @@
             if (element.postalCode != checkPost) {
                 checkPost = element.postalCode
                 let report = response.report.find((element) => (element.postcode == checkPost) ?? element)
+
+             
                 if (!report.con_total) return
 
                 html += `<tr class="p-0">
@@ -225,12 +227,12 @@
                         <span class="badge text-dark">รหัสไปรษณีย์ ${report.postcode} จำนวน: ${report.con_total || 0} ชิ้น</span>
                     </div>
                     <div class="d-md-flex align-items-center gap-1">
-                        <span class="badge text-bg-light">ND : ${number_format(((report.ND || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">2D : ${number_format(((report['2D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">3D : ${number_format(((report['3D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">4D : ${number_format(((report['4D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">5D : ${number_format(((report['5D'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
-                        <span class="d-none d-md-inline badge text-bg-light">6D : ${number_format(((report['OD'] || 0) / (report.con_success || 0)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">ND : ${number_format(((report.ND || 0) / (report.con_success || 1)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">2D : ${number_format(((report['2D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">3D : ${number_format(((report['3D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">4D : ${number_format(((report['4D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
+                        <span class="badge text-bg-light">5D : ${number_format(((report['5D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
+                        <span class="d-none d-md-inline badge text-bg-light">6D : ${number_format(((report['OD'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
                     </div>
                 </div>
             </td>
