@@ -61,19 +61,15 @@
     <h3 class="mt-5">ระบบตรวจเช็กสถานะการจัดส่งพัสดุ</h1>
     <p class="text-md text-danger" id="status"></p>
     <p class="text-sm" id="updated"></p>
-
     <div class="my-5 d-flex justify-content-center gap-3">
         <button class="btn btn-sm btn-outline-warning" type="button" id="block"># พื้นที่งดจัดส่ง/ล่าช้า ตามประกาศเคอรี่ (Official)</button>
     </div>
-
     <div class="input-group mb-3">
     <span class="input-group-text"><span class="material-symbols-outlined">explore</span></span>
     <input type="text" class="form-control" placeholder="ค้นหาพื้นที่">
     <button class="btn btn-outline-secondary" type="button" id="search">Search</button>
     </div>
-
     <div id="response"></div>
-
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-fullscreen-sm-down">
           <div class="modal-content">
@@ -137,7 +133,6 @@
     });
 
 
-
     function routeCode() {
 
         document.querySelectorAll(".routeCode").forEach(function (element) {
@@ -148,18 +143,14 @@
                 routeCode()
             })
         })
-
         document.querySelectorAll(".getModal").forEach(function (element) {
             element.addEventListener("click", function () {
                 const data = JSON.parse(window.atob(this.dataset.id));
-
                 const date = new Date()
                 const days14Ago = new Date(date.getTime());
                 const yesterday = new Date(date.getTime());
                 days14Ago.setDate(date.getDate() - 14)
                 yesterday.setDate(date.getDate() - 1)
-
-
                 document.querySelector(".postcode").innerHTML = data.postcode
                 document.querySelector("#status1").innerHTML = `
 <div class="text-start text-primary">สาขาที่เข้าร่วมโครงการกับเรา ได้มีการส่งพัสดุไปยังรหัสไปรษณีย์ ${data.postcode} จำนวน ${data.con_total} ชิ้น</div>
@@ -183,11 +174,9 @@
         <div class="text-start text-${(data['pending_5D'] > 0) ? 'danger' : 'dark'} text-sm">5 วัน = ${data.pending_5D} ชิ้น</div>
         <div class="text-start text-${(data['pending_OD'] > 0) ? 'danger' : 'dark'} text-sm">6 วัน = ${data.pending_OD} ชิ้น (พัสดุตกค้าง+ช้ามากกว่า 5 วัน)</div>
     </div>
-
-<div class="col card card-body">
-    <div class="text-start text-${(data['con_unsuccess'] > 0) ? 'danger' : 'dark'} text-sm">พัสดุตีกลับ, ลูกค้าปฎิเสธรับ, เกินกำหนดส่ง, ตีกลับอัตโนมัติ, พัสดุสูญหาย+เสียหาย = ${data.con_unsuccess} ชิ้น</div>
-</div>
-
+    <div class="col card card-body">
+        <div class="text-start text-${(data['con_unsuccess'] > 0) ? 'danger' : 'dark'} text-sm">พัสดุตีกลับ, ลูกค้าปฎิเสธรับ, เกินกำหนดส่ง, ตีกลับอัตโนมัติ, พัสดุสูญหาย+เสียหาย = ${data.con_unsuccess} ชิ้น</div>
+    </div>
 </div>`
             });
         });
@@ -197,11 +186,10 @@
     function render(response) {
 
         if (!response.data.length) { return `<div class="text-danger mt-4">ไม่พบข้อมูลการส่งพัสดุไปยังพื้นที่ดังกล่าว หรือ เป็นพื้นที่งดรับพัสดุชั่วคราว</div>`; }
-
         let status = ''
         let checkPost = ''
         let html = `<table class="table table-sm table-striped table-hover">`
-        let icon = ``
+        let icon = `<span class="material-symbols-outlined">location_on</span>`
 
         response.data.forEach(element => {
 
@@ -213,13 +201,10 @@
                 element.warningMessage = (!element.warningMessage) ? `<span class="text-sm">พัสดุทุกขนาดอาจล่าช้า</span>` : element.warningMessage
             }
 
-           
-
             if (element.postalCode != checkPost) {
                 checkPost = element.postalCode
                 let report = response.report.find((element) => (element.postcode == checkPost) ?? element)
 
-             
                 if (!report.con_total) return
 
                 html += `<tr class="p-0">
@@ -239,21 +224,17 @@
                 </div>
             </td>
            </tr>`
-
-            if(report['3D']>3||report['4D']>1||report['5D']>1||report['OD']>1||report['pending_3D']>1||report['pending_4D']>1||report['pending_5D']>1||report['pending_OD']>1){
-                icon = `<span class="material-symbols-outlined text-warning grow">location_on</span>`
-            }else{
-                icon = `<span class="material-symbols-outlined text-success">location_on</span>`
+                if(report['pending_3D']>1||report['pending_4D']>1||report['pending_5D']>1||report['pending_OD']>1){
+                    icon = `<span class="material-symbols-outlined text-warning grow">location_on</span>`
+                }else{
+                    icon = `<span class="material-symbols-outlined text-success">location_on</span>`
+                }
+                if (element.inactive) {
+                    icon = `<span class="material-symbols-outlined text-danger">wrong_location</span>`
+                }
             }
-            if (element.inactive) {
-                    icon = `<span class="material-symbols-outlined text-danger grow">wrong_location</span>`
-            }
-            }
-
-
-
             html += `<tr>
-            <td>${icon ?? ''}</td>
+            <td>${icon}</td>
             <td class="align-middle ">${element.district}</td>
             <td class="align-middle d-none d-md-table-cell">${element.amphur}</td>
             <td class="align-middle d-none d-lg-table-cell">${element.province}</td>
@@ -267,14 +248,13 @@
         return html
     }
 
-    function number_format(number_input = 0, decimal_places = 0, separator = ',') {
-        const formatted = parseFloat(number_input).toFixed(decimal_places).split(".");
-        const processing = separator === ','
-            ? formatted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-            : formatted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + separator)
-        return String(processing + (formatted[1] ? '.' + formatted[1] : ""))
-    }
-
+function number_format(number_input = 0, decimal_places = 0, separator = ',') {
+    const formatted = parseFloat(number_input).toFixed(decimal_places).split(".");
+    const processing = separator === ','
+        ? formatted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        : formatted[0].replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1" + separator)
+    return String(processing + (formatted[1] ? '.' + formatted[1] : ""))
+}
 </script>
 </body>
 </html>
