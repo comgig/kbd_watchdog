@@ -74,15 +74,15 @@
         <div class="modal-dialog modal-lg modal-fullscreen-sm-down">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">รายละเอียดสถานะการจัดส่งรหัส <span class="postcode"></span></h5>
+              <h5 class="modal-title" id="exampleModalLabel">สถานะการนำจ่ายรหัส <span class="postcode"></span></h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
             <div class="" id="status1"></div>
-            <div class="mt-4 text-start text-dark bg-warning rounded p-2 mb-1 btn btn-sm" data-bs-toggle="collapse" href="#collapseExample">KBD ลงทะเบียนเข้าร่วมโครงการ ฟรี!</div>
+            <div class="mt-4 text-start text-dark btn-outline-warning rounded p-2 mb-1 btn btn-sm" data-bs-toggle="collapse" href="#collapseExample">KBD ลงทะเบียนเข้าร่วมโครงการ ฟรี!</div>
             <div class="collapse mt-2" id="collapseExample">
                 <div class="card card-body" id="joinReturn">
-                    <div class="text-start text-sm text-primary"><p>ลงทะเบียนโดยใส่รหัสประจำสาขาเคอรี่บัดดี้เท่านั้น!<br>ถือเป็นการยินยอมให้ระบบเข้าถึงเลขพัสดุจากสาขาของท่าน และระบบทำการเช็คข้อมูลสถานะการจัดส่งทุกวัน</p></div>
+                    <div class="text-start text-sm text-primary"><p>ลงทะเบียนโดยใส่รหัสประจำสาขาเคอรี่บัดดี้เท่านั้น!<br>ถือเป็นการยินยอมให้ระบบบันทึกเลขพัสดุจากสาขาของท่าน และทำการ Track ข้อมูลเพื่ออัพเดตสถานะพัสดุทุกวัน</p></div>
                     <div class="input-group">
                         <input type="text" id="kbdInput" class="form-control" placeholder="รหัสสาขา KBXXXX" aria-label="KBXXXX" aria-describedby="button-addon2" maxlength="5">
                         <button class="btn btn-success" type="button" id="joinUs">Submit</button>
@@ -153,29 +153,35 @@
                 yesterday.setDate(date.getDate() - 1)
                 document.querySelector(".postcode").innerHTML = data.postcode
                 document.querySelector("#status1").innerHTML = `
-<div class="text-start text-primary">สาขาที่เข้าร่วมโครงการกับเรา ได้มีการส่งพัสดุไปยังรหัสไปรษณีย์ ${data.postcode} จำนวน ${data.con_total} ชิ้น</div>
-<div class="text-start text-dark text-sm">จากข้อมูลพัสดุที่สแกนออกจากสาขาตั้งแต่วันที่ ${((days14Ago.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]} ถึง ${((yesterday.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]}</div>
+<div class="text-start text-primary">ระบบตรวจพบการส่งพัสดุไปยัง ${data.postcode} จำนวน ${data.con_total} ชิ้น</div>
+<div class="text-start text-secondary text-sm">ข้อมูลจากสาขา KBD ระหว่างวันที่ ${((days14Ago.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]} ถึง ${((yesterday.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]}</div>
 <div class="mt-3 row gap-2">
     <div class="col col-lg-5 card card-body">
-        <div class="text-start text-primary">พัสดุที่จัดส่งสำเร็จแล้ว รวม ${data.con_success} ชิ้น</div>
-        <div class="mt-2 text-start text-${(data['ND'] > 0) ? 'success' : 'dark'} text-sm">ND = ${data.ND} ชิ้น (ส่งสำเร็จ ภายในวันถัดไป)</div>
-        <div class="text-start text-${(data['2D'] > 0) ? 'success' : 'dark'} text-sm">2D = ${data['2D']} ชิ้น</div>
-        <div class="text-start text-${(data['3D'] > 0) ? 'warning' : 'dark'} text-sm">3D = ${data['3D']} ชิ้น</div>
-        <div class="text-start text-${(data['4D'] > 0) ? 'warning' : 'dark'} text-sm">4D = ${data['4D']} ชิ้น</div>
-        <div class="text-start text-${(data['5D'] > 0) ? 'warning' : 'dark'} text-sm">5D = ${data['5D']} ชิ้น</div>
-        <div class="text-start text-${(data['OD'] > 0) ? 'warning' : 'dark'} text-sm">6D = ${data['OD']} ชิ้น (ส่งสำเร็จ โดยใช้เวลามากกว่า 5 วัน)</div>
-    </div>
-    <div class="col col-lg-5 card card-body">
-        <div class="text-start text-primary">พัสดุที่กำลังจัดส่ง รวม ${data.con_pending} ชิ้น</div>
-        <div class="mt-2 text-start text-${(data['pending_ND'] > 0) ? 'success' : 'dark'} text-sm">1 วัน = ${data.pending_ND} ชิ้น</div>
+        <div class="text-start text-primary">กำลังจัดส่ง รวม ${data.con_pending} ชิ้น</div>
+        <div class="mb-2 text-start text-sm text-secondary">ประสิทธิภาพการนำส่งของเมื่อวาน ( ${((yesterday.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]} )</div>
+
+        <div class="text-start text-${(data['pending_ND'] > 0) ? 'success' : 'dark'} text-sm">1 วัน = ${data.pending_ND} ชิ้น</div>
         <div class="text-start text-${(data['pending_2D'] > 0) ? 'success' : 'dark'} text-sm">2 วัน = ${data.pending_2D} ชิ้น</div>
         <div class="text-start text-${(data['pending_3D'] > 0) ? 'warning' : 'dark'} text-sm">3 วัน = ${data.pending_3D} ชิ้น</div>
-        <div class="text-start text-${(data['pending_4D'] > 0) ? 'danger' : 'dark'} text-sm">4 วัน = ${data.pending_4D} ชิ้น</div>
+        <div class="text-start text-${(data['pending_4D'] > 0) ? 'warning' : 'dark'} text-sm">4 วัน = ${data.pending_4D} ชิ้น</div>
         <div class="text-start text-${(data['pending_5D'] > 0) ? 'danger' : 'dark'} text-sm">5 วัน = ${data.pending_5D} ชิ้น</div>
-        <div class="text-start text-${(data['pending_OD'] > 0) ? 'danger' : 'dark'} text-sm">6 วัน = ${data.pending_OD} ชิ้น (พัสดุตกค้าง+ช้ามากกว่า 5 วัน)</div>
+        <div class="text-start text-${(data['pending_OD'] > 0) ? 'danger' : 'dark'} text-sm">6 วัน = ${data.pending_OD} ชิ้น</div>
+    </div>
+    <div class="col col-lg-5 card card-body">
+        <div class="text-start text-success">พัสดุที่จัดส่งสำเร็จแล้ว ${data.con_success} ชิ้น</div>
+        <div class="mb-2 text-start text-sm text-secondary">ประสิทธิภาพการนำส่งจาก 2 สัปดาห์ที่ผ่านมา</div>
+
+        <div class="ps-2 text-start text-sm text-${(data.ND > 0) ? 'success' : 'dark'}"><span class="">ND = ${data.ND}</span></div>
+        <div class="ps-2 text-start text-sm text-${(data['2D'] > 0) ? 'success' : 'dark'}"><span class="">2D = ${data['2D']}</span></div>
+        <div class="ps-2 text-start text-sm text-${(data['3D'] > 0) ? 'warning' : 'dark'}"><span class="">3D = ${data['3D']}</span></div>
+        <div class="ps-2 text-start text-sm text-${(data['4D'] > 0) ? 'warning' : 'dark'}"><span class="">4D = ${data['4D']}</span></div>
+        <div class="ps-2 text-start text-sm text-${(data['5D'] > 0) ? 'danger' : 'dark'}"><span class="">5D = ${data['5D']}</span></div>
+        <div class="ps-2 text-start text-sm text-${(data.OD > 0) ? 'danger' : 'dark'} d-flex justify-content-between"><span class="">6D = ${data['OD']}</span></div>
     </div>
     <div class="col card card-body">
-        <div class="text-start text-${(data['con_unsuccess'] > 0) ? 'danger' : 'dark'} text-sm">พัสดุตีกลับ, ลูกค้าปฎิเสธรับ, เกินกำหนดส่ง, ตีกลับอัตโนมัติ, พัสดุสูญหาย+เสียหาย = ${data.con_unsuccess} ชิ้น</div>
+        <div class="text-start text-${(data['con_unsuccess'] > 0) ? 'danger' : 'dark'}">พัสดุส่งไม่สำเร็จ รวม ${data.con_unsuccess} ชิ้น</div>
+        <div class="text-start text-sm text-secondary">(พัสดุตีกลับ, ลูกค้าปฎิเสธรับ, เกินกำหนดส่ง, ตีกลับอัตโนมัติ, พัสดุสูญหาย+เสียหาย)</div>
+
     </div>
 </div>`
             });
