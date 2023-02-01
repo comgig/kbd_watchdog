@@ -187,37 +187,37 @@
             <tr class=" text-${(data['pending_ND'] > 0) ? 'success' : 'dark'}">
                 <td class="">1 วัน (พัสดุเข้าใหม่)</td>
                 <td class="">${data.pending_ND}</td>
-                <td class="">${number_format((data.pending_ND/data.con_pending)*100,0)}%</td>
+                <td class="">${number_format((data.pending_ND/(data.con_pending||1))*100,0)}%</td>
 
             </tr>
             <tr class=" text-${(data['pending_2D'] > 0) ? 'success' : 'dark'}">
                 <td class="">2 วัน</td>
                 <td class="">${data.pending_2D}</td>
-                <td class="">${number_format((data.pending_2D/data.con_pending)*100,0)}%</td>
+                <td class="">${number_format((data.pending_2D/(data.con_pending||1))*100,0)}%</td>
 
             </tr>
             <tr class=" text-${(data['pending_3D'] > 0) ? 'warning' : 'dark'}">
                 <td class="">3 วัน</td>
                 <td class="">${data.pending_3D}</td>
-                <td class="">${number_format((data.pending_3D/data.con_pending)*100,0)}%</td>
+                <td class="">${number_format((data.pending_3D/(data.con_pending||1))*100,0)}%</td>
 
             </tr>
             <tr class=" text-${(data['pending_4D'] > 0) ? 'warning' : 'dark'}">
                 <td class="">4 วัน</td>
                 <td class="">${data.pending_4D}</td>
-                <td class="">${number_format((data.pending_4D/data.con_pending)*100,0)}%</td>
+                <td class="">${number_format((data.pending_4D/(data.con_pending||1))*100,0)}%</td>
 
             </tr>
             <tr class="text-${(data['pending_5D'] > 0) ? 'danger' : 'dark'}">
                 <td class="">5 วัน</td>
                 <td class="">${data.pending_5D}</td>
-                <td class="">${number_format((data.pending_5D/data.con_pending)*100,0)}%</td>
+                <td class="">${number_format((data.pending_5D/(data.con_pending||1))*100,0)}%</td>
 
             </tr>
             <tr class="text-${(data['pending_OD'] > 0) ? 'danger' : 'dark'}">
                 <td class="">มากกว่า 5 วัน</td>
                 <td class="w-25">${data.pending_OD}</td>
-                <td class="w-25">${number_format((data.pending_OD/data.con_pending)*100,0)}%</td>
+                <td class="w-25">${number_format((data.pending_OD/(data.con_pending||1))*100,0)}%</td>
             </tr>
         </table>
 
