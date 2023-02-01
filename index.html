@@ -28,13 +28,9 @@
             cursor: pointer;
         }
         .pointer{
-            cursor: pointer;
-            background-color: rgb(255, 218, 172);
+            background-color: rgb(255, 204, 153);          
         }
-        .pointer:hover{
-            cursor: pointer;
-            background-color: rgb(255, 174, 0);
-        }
+
         .grow {
             animation-name: spin;
             animation-duration: 500ms;
@@ -82,11 +78,11 @@
     </div>
     <div class="input-group mb-3">
     <span class="input-group-text"><span class="material-symbols-outlined">explore</span></span>
-    <input type="text" class="form-control" placeholder="ค้นหาพื้นที่">
+    <input type="text" class="form-control" placeholder="ค้นหาพื้นที่" data-search>
     <button class="btn btn-outline-secondary" type="button" id="search">Search</button>
     </div>
     <div id="response" style="min-height: 20vh;">
-        <div class="m-5 text-secondary">ด้วยความร่วมมือจากเครือข่ายสมาชิกเคอรี่บัดดี้ทั่วประเทศที่แบ่งบันข้อมูล ทำให้สาขาต้นทางรับพัสดุทราบถึงสถานะการณ์ล่าสุดของศูนย์กระจายสินค้าปลายทางในแต่ละพื้นที่ เพื่อวางแผนในการรับฝากพัสดุก่อนที่จะเกิดปัญหาได้ในอนาคต</div></div>
+        <div class="m-5 text-secondary text-sm">ด้วยความร่วมมือจากเครือข่ายสมาชิกเคอรี่บัดดี้ทั่วประเทศที่แบ่งบันข้อมูล ทำให้สาขาต้นทางรับพัสดุทราบถึงสถานะการณ์ล่าสุดของศูนย์กระจายสินค้าปลายทางในแต่ละพื้นที่ เพื่อวางแผนในการรับฝากพัสดุก่อนที่จะเกิดปัญหาได้ในอนาคต</div></div>
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-fullscreen-sm-down">
           <div class="modal-content">
@@ -98,7 +94,7 @@
             <div class="" id="status1"></div>
             <div class="collapse mt-3" id="collapseExample">
                 <div class="card card-body" id="joinReturn">
-                    <div class="text-start text-sm text-primary"><p>ลงทะเบียนโดยใส่รหัสประจำสาขาเคอรี่บัดดี้เท่านั้น!<br>ถือเป็นการยินยอมให้ระบบบันทึกเลขพัสดุจากสาขาของท่าน และทำการ Track ข้อมูลเพื่ออัพเดตสถานะพัสดุทุกวัน</p></div>
+                    <div class="text-start text-sm text-dark"><p>ลงทะเบียนโดยใส่รหัสประจำสาขาเคอรี่บัดดี้เท่านั้น!<br>ถือเป็นการยินยอมให้ระบบบันทึกเลขพัสดุจากสาขาของท่าน และทำการ Track ข้อมูลเพื่ออัพเดตสถานะพัสดุทุกวัน</p></div>
                     <div class="input-group">
                         <input type="text" id="kbdInput" class="form-control" placeholder="รหัสสาขา KBXXXX" aria-label="KBXXXX" aria-describedby="button-addon2" maxlength="5">
                         <button class="btn btn-success" type="button" id="joinUs">Submit</button>
@@ -107,7 +103,7 @@
               </div>
             </div>
             <div class="modal-footer d-flex justify-content-between">
-                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" href="#collapseExample">KBD ลงทะเบียนเข้าร่วมโครงการ ฟรี!</button>
+                <button type="button" class="btn btn-sm btn-outline-dark" data-bs-toggle="collapse" href="#collapseExample">KBD ลงทะเบียนเข้าร่วมโครงการ ฟรี!</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
           </div>
@@ -127,7 +123,7 @@
         loader("off")
     });
 
-    document.querySelector("input").addEventListener("keydown", async (e) => {
+    document.querySelector("[data-search]").addEventListener("keydown", async (e) => {
         if (e.key === 'Enter') {
             loader("on")
             const response = await API({ "action": "search", "value": document.querySelector("input").value })
@@ -166,7 +162,7 @@
                 routeCode()
             })
         })
-        document.querySelectorAll(".getModal").forEach(function (element) {
+        document.querySelectorAll("[data-bs-target]").forEach(function (element) {
             element.addEventListener("click", function () {
                 const data = JSON.parse(window.atob(this.dataset.id));
                 const date = new Date()
@@ -177,29 +173,103 @@
                 document.querySelector(".postcode").innerHTML = data.postcode
                 document.querySelector("#status1").innerHTML = `
 <div class="text-start text-primary">ระบบตรวจพบการส่งพัสดุไปยัง ${data.postcode} จำนวน ${data.con_total} ชิ้น</div>
-<div class="text-start text-secondary text-sm">ข้อมูลจากสาขา KBD ระหว่างวันที่ ${((days14Ago.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]} ถึง ${((yesterday.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]}</div>
+<div class="text-start text-secondary text-sm">เฉพาะพัสดุที่ส่งจากสาขา KBD ที่เข้าร่วมโครงการเท่านั้น ไม่ใช่จำนวนพัสดุทั้งหมดของเคอรี่ <br>ซึ่งเป็นพัสดุส่วนน้อยจากจำนวนในคลังทั้งหมด ผลสรุปที่ได้อาจไม่ตรงตามสถานการณ์จริง <span class="text-danger">โปรดใช้วิจารณญาณในการรับข้อมูล</span></div>
 <div class="mt-3 row gap-2">
     <div class="col col-lg-5 card card-body">
-        <div class="text-start text-primary">มีพัสดุ ${data.con_pending} ชิ้น ที่ต้องนำส่ง</div>
-        <div class="mb-2 text-start text-sm text-secondary">สถานะพัสดุคงคลังที่รอนำส่ง ประจำวันที่ ${((date.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]}</div>
+        <div class="text-start text-primary">${data.postcode} มีพัสดุคงคลัง ${data.con_pending} ชิ้น</div>
+        <div class="mb-2 text-start text-sm text-secondary">อัพเดตประจำวันที่ ${((date.toLocaleString('en-GB', { timeZone: 'UTC' })).split(', '))[0]}</div>
 
-        <div class="w-50 d-flex justify-content-between text-start text-${(data['pending_ND'] > 0) ? 'success' : 'dark'} text-sm"><span>พัสดุ 1 วัน</span><span>${data.pending_ND}</span>ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between text-start text-${(data['pending_2D'] > 0) ? 'success' : 'dark'} text-sm"><span>พัสดุ 2 วัน</span><span>${data.pending_2D}</span>ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between text-start text-${(data['pending_3D'] > 0) ? 'warning' : 'dark'} text-sm"><span>พัสดุ 3 วัน</span><span>${data.pending_3D}</span>ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between text-start text-${(data['pending_4D'] > 0) ? 'warning' : 'dark'} text-sm"><span>พัสดุ 4 วัน</span><span>${data.pending_4D}</span>ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between text-start text-${(data['pending_5D'] > 0) ? 'danger' : 'dark'} text-sm"><span>พัสดุ 5 วัน</span><span>${data.pending_5D}</span>ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between text-start text-${(data['pending_OD'] > 0) ? 'danger' : 'dark'} text-sm"><span>พัสดุ 6 วัน</span><span>${data.pending_OD}</span>ชิ้น</div>
-    </div>
+        <table class="table-sm text-sm table-bordered table-primary">
+            <tr class="bg-primary text-white">
+                <td class="w-50">วันที่พัสดุคงคลัง</td>
+                <td class="w-50" colspan="2">จำนวนพัสดุ</td>
+            </tr>
+            <tr class=" text-${(data['pending_ND'] > 0) ? 'success' : 'dark'}">
+                <td class="">1 วัน (พัสดุเข้าใหม่)</td>
+                <td class="">${data.pending_ND}</td>
+                <td class="">${number_format((data.pending_ND/data.con_pending)*100,0)}%</td>
+
+            </tr>
+            <tr class=" text-${(data['pending_2D'] > 0) ? 'success' : 'dark'}">
+                <td class="">2 วัน</td>
+                <td class="">${data.pending_2D}</td>
+                <td class="">${number_format((data.pending_2D/data.con_pending)*100,0)}%</td>
+
+            </tr>
+            <tr class=" text-${(data['pending_3D'] > 0) ? 'warning' : 'dark'}">
+                <td class="">3 วัน</td>
+                <td class="">${data.pending_3D}</td>
+                <td class="">${number_format((data.pending_3D/data.con_pending)*100,0)}%</td>
+
+            </tr>
+            <tr class=" text-${(data['pending_4D'] > 0) ? 'warning' : 'dark'}">
+                <td class="">4 วัน</td>
+                <td class="">${data.pending_4D}</td>
+                <td class="">${number_format((data.pending_4D/data.con_pending)*100,0)}%</td>
+
+            </tr>
+            <tr class="text-${(data['pending_5D'] > 0) ? 'danger' : 'dark'}">
+                <td class="">5 วัน</td>
+                <td class="">${data.pending_5D}</td>
+                <td class="">${number_format((data.pending_5D/data.con_pending)*100,0)}%</td>
+
+            </tr>
+            <tr class="text-${(data['pending_OD'] > 0) ? 'danger' : 'dark'}">
+                <td class="">มากกว่า 5 วัน</td>
+                <td class="w-25">${data.pending_OD}</td>
+                <td class="w-25">${number_format((data.pending_OD/data.con_pending)*100,0)}%</td>
+            </tr>
+        </table>
+
+
+        </div>
     <div class="col col-lg-5 card card-body">
         <div class="text-start text-success">พัสดุที่จัดส่งสำเร็จแล้ว ${data.con_success} ชิ้น</div>
-        <div class="mb-2 text-start text-sm text-secondary">ข้อมูลประสิทธิภาพการนำส่งจาก 2 สัปดาห์ที่ผ่านมา</div>
+        <div class="mb-2 text-start text-sm text-secondary">จากข้อมูลพัสดุ POD ย้อนหลัง 2 สัปดาห์</div>
 
-        <div class="w-50 d-flex justify-content-between ps-2 text-start text-sm text-${(data.ND > 0) ? 'success' : 'dark'}"><span>ND</span><span>${data.ND}</span> ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between ps-2 text-start text-sm text-${(data['2D'] > 0) ? 'success' : 'dark'}"><span>2D</span><span>${data['2D']}</span> ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between ps-2 text-start text-sm text-${(data['3D'] > 0) ? 'warning' : 'dark'}"><span>3D</span><span>${data['3D']}</span> ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between ps-2 text-start text-sm text-${(data['4D'] > 0) ? 'warning' : 'dark'}"><span>4D</span><span>${data['4D']}</span> ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between ps-2 text-start text-sm text-${(data['5D'] > 0) ? 'danger' : 'dark'}"><span>5D</span><span>${data['5D']}</span> ชิ้น</div>
-        <div class="w-50 d-flex justify-content-between ps-2 text-start text-sm text-${(data.OD > 0) ? 'danger' : 'dark'} d-flex justify-content-between"><span>6D</span><span>${data['OD']}</span> ชิ้น</div>
+        <table class="table-sm text-sm table-bordered table-success">
+            <tr class="bg-success text-white">
+                <td class="w-50">วันที่พัสดุ จัดส่งสำเร็จ</td>
+                <td class="w-50" colspan="2">จำนวนพัสดุ</td>
+            </tr>
+            <tr class=" text-${(data['ND'] > 0) ? 'success' : 'dark'}">
+                <td class="">1 วัน</td>
+                <td class="">${data.ND}</td>
+                <td class="w-25">${number_format((data.ND/data.con_success)*100,0)}%</td>
+
+            </tr>
+            <tr class=" text-${(data['2D'] > 0) ? 'success' : 'dark'}">
+                <td class="">2 วัน</td>
+                <td class="">${data['2D']}</td>
+                <td class="w-25">${number_format((data['2D']/data.con_success)*100,0)}%</td>
+
+            </tr>
+            <tr class=" text-${(data['3D'] > 0) ? 'warning' : 'dark'}">
+                <td class="">3 วัน</td>
+                <td class="">${data['3D']}</td>
+                <td class="w-25">${number_format((data['3D']/data.con_success)*100,0)}%</td>
+
+            </tr>
+            <tr class=" text-${(data['4D'] > 0) ? 'warning' : 'dark'}">
+                <td class="">4 วัน</td>
+                <td class="">${data['4D']}</td>
+                <td class="w-25">${number_format((data['4D']/data.con_success)*100,0)}%</td>
+
+            </tr>
+            <tr class="text-${(data['5D'] > 0) ? 'danger' : 'dark'}">
+                <td class="">5 วัน</td>
+                <td class="">${data['5D']}</td>
+                <td class="w-25">${number_format((data['5D']/data.con_success)*100,0)}%</td>
+
+            </tr>
+            <tr class="text-${(data['OD'] > 0) ? 'danger' : 'dark'}">
+                <td class="">มากกว่า 5 วัน</td>
+                <td class="">${data.OD}</td>
+                <td class="w-25">${number_format((data.OD/data.con_success)*100,0)}%</td>
+
+            </tr>
+        </table>
+
     </div>
     ${data.con_unsuccess?`
     <div class="col card card-body">
@@ -224,39 +294,33 @@
             let warningMessage = ''
         
             if (element.esaSurcharged == "1"){
-                warningMessage = (element.province=="ภูเก็ต")?`พื้นที่พิเศษ การท่องเที่ยว`:`พื้นที่ห่างไกล`
-
+                warningMessage = (element.province=="ภูเก็ต")?`พื้นที่ท่องเที่ยวพิเศษ`:`พื้นที่ห่างไกล`
             }
             if (element.warningMessage){
                 warningMessage = (element.warningMessage=="งดรับพัสดุไปยังปลายทางดังกล่าวชั่วคราว!!")?'พื้นที่ปิดรับพัสดุ':element.warningMessage
             }
 
-         
-
             if (element.postalCode != checkPost) {
                 checkPost = element.postalCode
                 let report = response.report.find((element) => (element.postcode == checkPost) ?? element)
-
                 if (!report.con_total) return
 
                 html += `<tr class="p-0">
             <td colspan="7" class="p-0 text-md-start bg-light">
-                <div class="d-md-flex justify-content-between p-2 pointer getModal" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="${window.btoa(JSON.stringify(report))}">
-                    <div class="d-md-flex align-items-center gap-1">
-                        <span class="badge text-dark">รหัสไปรษณีย์ ${report.postcode} จำนวน: ${report.con_total || 0} ชิ้น</span>
+                <div class="d-md-flex justify-content-between p-1 pointer">
+
+                    <div class="d-flex btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="${window.btoa(JSON.stringify(report))}">
+                        <span class="me-2 material-symbols-outlined">table_chart_view</span>
+                        <span class="mt-1 ">ข้อมูลพัสดุคงคลัง ${report.postcode}</span>
                     </div>
-                    <div class="d-md-flex align-items-center gap-1">
-                        <span class="badge text-bg-light">ND : ${number_format(((report.ND || 0) / (report.con_success || 1)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">2D : ${number_format(((report['2D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">3D : ${number_format(((report['3D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">4D : ${number_format(((report['4D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
-                        <span class="badge text-bg-light">5D : ${number_format(((report['5D'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
-                        <span class="d-none d-md-inline badge text-bg-light">6D : ${number_format(((report['OD'] || 0) / (report.con_success || 1)) * 100, 0)}%</span>
-                    </div>
+                 
                 </div>
             </td>
            </tr>`
-                if(report['pending_3D']>1||report['pending_4D']>1||report['pending_5D']>1||report['pending_OD']>1){
+
+           const warningRate = (((report.pending_3D+report.pending_4D+report.pending_5D+report.pending_OD)/report.con_pending)*100)
+
+                if(warningRate>30){
                     icon = `<span class="material-symbols-outlined text-warning grow">location_on</span>`
                 }else{
                     icon = `<span class="material-symbols-outlined text-success">location_on</span>`
